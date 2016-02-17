@@ -23,6 +23,8 @@ namespace MvcCms.Models
         [Display(Name = "Date Published")]
         public DateTime? Published { get; set; }
 
+        public IList<string> Tags { get; set; }
+
         public int AuthorId { get; set; }
     }
 }
