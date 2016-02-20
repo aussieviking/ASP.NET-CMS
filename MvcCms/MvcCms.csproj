@@ -129,9 +129,11 @@
     <Compile Include="Areas\Admin\Controllers\TagController.cs" />
     <Compile Include="Data\IPostRepository.cs" />
     <Compile Include="Data\ITagRepository.cs" />
+    <Compile Include="Data\PostRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ModelBinders\PostModelBinder.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -149,6 +151,8 @@
     <Content Include="Areas\Admin\Views\Post\_postForm.cshtml" />
     <Content Include="Areas\Admin\Views\Tag\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Tag\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Tag\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\TagEditor.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

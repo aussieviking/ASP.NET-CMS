@@ -50,5 +50,26 @@ namespace MvcCms.Areas.Admin.Controllers
 
             return RedirectToAction("index");
         }
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string tag)
+        {
+            if (!_repository.Exists(tag)) return HttpNotFound();
+
+            return View(tag);
+        }
+
+        // added foo because the post signature needs to differ from get...!?!?
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string tag, bool foo)
+        {
+            if (!_repository.Exists(tag)) return HttpNotFound();
+
+            _repository.Delete(tag);
+
+            return RedirectToAction("index");
+        }
     }
 }
