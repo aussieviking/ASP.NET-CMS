@@ -184,6 +184,7 @@
     <Compile Include="Models\CmsUser.cs" />
     <Compile Include="Models\ModelBinders\PostModelBinder.cs" />
     <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\StringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

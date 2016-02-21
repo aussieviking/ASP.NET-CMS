@@ -5,6 +5,7 @@ using Telerik.JustMock;
 using MvcCms.Data;
 using System.Web.Mvc;
 using MvcCms.Models;
+using System.Collections.Generic;
 
 namespace MvcCms.Tests.Admin.Controllers
 {
@@ -54,6 +55,8 @@ namespace MvcCms.Tests.Admin.Controllers
 
             Mock.Arrange(() => repo.Get(id))
                 .Returns((Post)null);
+            Mock.Arrange(() => repo.Edit(Arg.IsAny<string>(), Arg.IsAny<Post>()))
+                .Throws(new KeyNotFoundException());
 
             var result = controller.Edit(id, new Post());
 
