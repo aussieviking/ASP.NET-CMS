@@ -11,6 +11,9 @@ namespace MvcCms.Data
 {
     public class CmsContext : IdentityDbContext<CmsUser>
     {
+        public CmsContext() : base("LocalDb")
+        { }
+
         public CmsContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
         }

@@ -35,9 +35,7 @@ namespace MvcCms.Areas.Admin.Controllers
         [Route("create")]
         public ActionResult Create()
         {
-            var model = new Post() { Tags = new List<string> { "test-1", "test-2" } };
-
-            return View(model);
+            return View(new Post());
         }
 
         // /admin/post/create
@@ -48,8 +46,23 @@ namespace MvcCms.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            // TODO: Create model in data store
-            _repository.Create(model);
+            if (String.IsNullOrWhiteSpace(model.Id))
+            {
+                model.Id = model.Title;
+            }
+
+            model.Id = model.Id.MakeUrlFriendly();
+            model.Tags = model.Tags.Select(tag => tag.MakeUrlFriendly()).ToList();
+
+            try
+            {
+                _repository.Create(model);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("key", e);
+                return View();
+            }
 
             return RedirectToAction("index");
         }
@@ -59,7 +72,6 @@ namespace MvcCms.Areas.Admin.Controllers
         [Route("create/{postId}")]
         public ActionResult Edit(string postId)
         {
-            // TODO: retrieve model from the datastore
             var post = _repository.Get(postId);
             if (post == null) return HttpNotFound();
 
@@ -72,13 +84,29 @@ namespace MvcCms.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string postId, Post model)
         {
-            var post = _repository.Get(postId);
-            if (post == null) return HttpNotFound();
-
             if (!ModelState.IsValid) return View(model);
 
-            // TODO: Update model in data store
-            _repository.Edit(postId, model);
+            if (String.IsNullOrWhiteSpace(model.Id))
+            {
+                model.Id = model.Title;
+            }
+
+            model.Id = model.Id.MakeUrlFriendly();
+            model.Tags = model.Tags.Select(tag => tag.MakeUrlFriendly()).ToList();
+
+            try
+            {
+                _repository.Edit(postId, model);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return HttpNotFound();
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("key", e);
+                return View();
+            }
 
             return RedirectToAction("index");
         }

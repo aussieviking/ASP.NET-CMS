@@ -8,26 +8,62 @@ namespace MvcCms.Data
 {
     public class PostRepository : IPostRepository
     {
-        
-
-        public void Create(Post model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Edit(string id, Post updatedItem)
-        {
-            throw new NotImplementedException();
-        }
-
         public Post Get(string id)
         {
-            throw new NotImplementedException();
+            using (var db = new CmsContext())
+            {
+                return db.Posts
+                    .Include("Author")
+                    .SingleOrDefault(post => post.Id == id);
+            }
         }
 
         public IEnumerable<Post> GetAll()
         {
-            throw new NotImplementedException();
+            using (var db = new CmsContext())
+            {
+                return db.Posts
+                    .Include("Author")
+                    .OrderByDescending(post => post.Created)
+                    .ToArray();
+            }
+        }
+
+        public void Create(Post model)
+        {
+            using (var db = new CmsContext())
+            {
+                var post = db.Posts.SingleOrDefault(p => p.Id == model.Id);
+                if (post != null)
+                {
+                    throw new ArgumentException("A post with the id of " + model.Id + " already exists");
+                }
+
+                db.Posts.Attach(model);
+                db.SaveChanges();
+            }
+        }
+
+        public void Edit(string id, Post updatedItem)
+        {
+            using (var db = new CmsContext())
+            {
+                var post = db.Posts.SingleOrDefault(p => p.Id == id);
+
+                if (post == null)
+                {
+                    throw new KeyNotFoundException("A post with the id of " + id + " does not exist in the data store");
+                }
+
+                post.Id = updatedItem.Id;
+                post.Title = updatedItem.Title;
+                post.Content = updatedItem.Content;
+                post.Published = updatedItem.Published;
+                post.Tags = updatedItem.Tags
+                    .Select(tag => tag.MakeUrlFriendly()).ToList();
+
+                db.SaveChanges();
+            }
         }
     }
 }
