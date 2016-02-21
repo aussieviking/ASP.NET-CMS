@@ -26,9 +26,12 @@ namespace MvcCms.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Edit(string tag)
         {
-            if (!_repository.Exists(tag)) return HttpNotFound();
-
-            return View(tag);
+            try
+            {
+                var model = _repository.Get(tag);
+                return View(model);
+            }
+            catch (KeyNotFoundException e) { return HttpNotFound(); }
         }
 
         [HttpPost]
@@ -55,9 +58,12 @@ namespace MvcCms.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string tag)
         {
-            if (!_repository.Exists(tag)) return HttpNotFound();
-
-            return View(tag);
+            try
+            {
+                var model = _repository.Get(tag);
+                return View(model);
+            }
+            catch (KeyNotFoundException e) { return HttpNotFound(); }
         }
 
         // added foo because the post signature needs to differ from get...!?!?
@@ -65,11 +71,12 @@ namespace MvcCms.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string tag, bool foo)
         {
-            if (!_repository.Exists(tag)) return HttpNotFound();
-
-            _repository.Delete(tag);
-
-            return RedirectToAction("index");
+            try
+            {
+                _repository.Delete(tag);
+                return RedirectToAction("index");
+            }
+            catch (KeyNotFoundException e) { return HttpNotFound(); }
         }
     }
 }

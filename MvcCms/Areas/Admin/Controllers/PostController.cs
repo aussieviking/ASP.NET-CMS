@@ -69,7 +69,7 @@ namespace MvcCms.Areas.Admin.Controllers
 
         // /admin/post/edit/<postid>
         [HttpGet]
-        [Route("create/{postId}")]
+        [Route("edit/{postId}")]
         public ActionResult Edit(string postId)
         {
             var post = _repository.Get(postId);
@@ -109,6 +109,34 @@ namespace MvcCms.Areas.Admin.Controllers
             }
 
             return RedirectToAction("index");
+        }
+
+        // /admin/post/delete/<postid>
+        [HttpGet]
+        [Route("delete/{postId}")]
+        public ActionResult Delete(string postId)
+        {
+            var post = _repository.Get(postId);
+            if (post == null) return HttpNotFound();
+
+            return View(post);
+        }
+
+        // /admin/post/delete/<postid>
+        [HttpPost]
+        [Route("delete/{postId}")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(string postId, string model)
+        {
+            try
+            {
+                _repository.Delete(postId);
+                return RedirectToAction("index");
+            }
+            catch (KeyNotFoundException e)
+            {
+                return HttpNotFound();
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace MvcCms.Data
         Post Get(string id);
         void Edit(string id, Post updatedItem);
         void Create(Post model);
+        void Delete(string id);
         IEnumerable<Post> GetAll();
     }
 }
