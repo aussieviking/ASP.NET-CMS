@@ -164,6 +164,7 @@
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.15.0-build58334.js" />
     <Content Include="scripts\ai.0.15.0-build58334.min.js" />
+    <Content Include="Areas\Admin\Views\Post\Delete.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -205,6 +206,7 @@
     <Content Include="Areas\Admin\Views\Tag\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Tag\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\TagEditor.cshtml" />
+    <Content Include="Areas\Admin\Views\Post\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

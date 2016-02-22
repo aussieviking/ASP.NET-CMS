@@ -39,7 +39,7 @@ namespace MvcCms.Data
                     throw new ArgumentException("A post with the id of " + model.Id + " already exists");
                 }
 
-                db.Posts.Attach(model);
+                db.Posts.Add(model);
                 db.SaveChanges();
             }
         }

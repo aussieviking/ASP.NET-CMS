@@ -14,8 +14,8 @@ namespace MvcCms
     {
         protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            AreaRegistration.RegisterAllAreas();
             AuthDbConfig.RegisterAdmin();
             ModelBinders.Binders.Add(typeof(Post), new PostModelBinder());
         }
