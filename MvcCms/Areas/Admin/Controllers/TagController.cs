@@ -1,4 +1,5 @@
 ﻿using MvcCms.Data;
+using MvcCms.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace MvcCms.Areas.Admin.Controllers
             try
             {
                 var model = _repository.Get(tag);
-                return View(model);
+                return View(model: model);
             }
             catch (KeyNotFoundException e) { return HttpNotFound(); }
         }
@@ -49,10 +50,12 @@ namespace MvcCms.Areas.Admin.Controllers
             if (string.IsNullOrWhiteSpace(newTag))
             {
                 ModelState.AddModelError("key", "New tag value cannot be empty.");
-                return View(tag);
+                return View(model: tag);
             }
 
             var tags = _repository.GetAll();
+
+            newTag = newTag.MakeUrlFriendly();
 
             if (!tags.Contains(tag)) return HttpNotFound();
             if (tags.Contains(newTag)) return RedirectToAction("index");
@@ -64,13 +67,12 @@ namespace MvcCms.Areas.Admin.Controllers
 
         [HttpGet]
         [Route("delete/{tag}")]
-        [ValidateAntiForgeryToken]
         public ActionResult Delete(string tag)
         {
             try
             {
                 var model = _repository.Get(tag);
-                return View(model);
+                return View(model: model);
             }
             catch (KeyNotFoundException e) { return HttpNotFound(); }
         }
@@ -79,7 +81,7 @@ namespace MvcCms.Areas.Admin.Controllers
         [HttpPost]
         [Route("delete/{tag}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(string tag, bool foo)
+        public ActionResult Delete(string tag, string foo)
         {
             try
             {

@@ -11,7 +11,8 @@ namespace MvcCms.Data
         {
             using (var db = new CmsContext())
             {
-                return db.Posts.SelectMany(post => post.Tags).Distinct().ToList();
+                var tagsCollection = db.Posts.Select(p => p.CombinedTags).ToList();
+                return String.Join(",", tagsCollection).Split(',').Distinct();
             }
         }
 
@@ -19,7 +20,8 @@ namespace MvcCms.Data
         {
             using (var db = new CmsContext())
             {
-                var posts = db.Posts
+                var posts = db.Posts.Where(p => p.CombinedTags.Contains(tag)).ToList();
+                posts = posts
                     .Where(post => post.Tags.Contains(tag, StringComparer.CurrentCultureIgnoreCase))
                     .ToList();
 
@@ -33,7 +35,8 @@ namespace MvcCms.Data
         {
             using (var db = new CmsContext())
             {
-                var posts = db.Posts
+                var posts = db.Posts.Where(p => p.CombinedTags.Contains(existingTag)).ToList();
+                posts = posts
                     .Where(post => post.Tags.Contains(existingTag, StringComparer.CurrentCultureIgnoreCase))
                     .ToList();
 
@@ -53,7 +56,8 @@ namespace MvcCms.Data
         {
             using (var db = new CmsContext())
             {
-                var posts = db.Posts
+                var posts = db.Posts.Where(p => p.CombinedTags.Contains(tag)).ToList();
+                posts = posts
                     .Where(post => post.Tags.Contains(tag, StringComparer.CurrentCultureIgnoreCase))
                     .ToList();
 

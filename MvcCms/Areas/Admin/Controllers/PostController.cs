@@ -57,7 +57,7 @@ namespace MvcCms.Areas.Admin.Controllers
 
             model.Created = DateTime.Now;
 
-            model.AuthorId = "7a4ff255-70d2-41e8-9325-6e8d3d60ae7d";
+            model.AuthorId = "c57b52dc-7088-4b1f-a20f-c4e38399f335";
 
             try
             {
@@ -65,8 +65,8 @@ namespace MvcCms.Areas.Admin.Controllers
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("key", e);
-                return View();
+                ModelState.AddModelError(String.Empty, e.Message);
+                return View(model);
             }
 
             return RedirectToAction("index");
