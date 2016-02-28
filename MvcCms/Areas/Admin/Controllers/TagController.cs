@@ -7,15 +7,21 @@ using System.Web.Mvc;
 
 namespace MvcCms.Areas.Admin.Controllers
 {
+    [RouteArea("Admin")]
+    [RoutePrefix("tag")]
     public class TagController : Controller
     {
         private readonly ITagRepository _repository;
+
+        public TagController() : this(new TagRepository()) { }
+
         public TagController(ITagRepository repository)
         {
             _repository = repository;
         }
 
         // GET: Admin/Tag
+        [Route("")]
         public ActionResult Index()
         {
             var tags = _repository.GetAll();
@@ -24,6 +30,7 @@ namespace MvcCms.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("edit/{tag}")]
         public ActionResult Edit(string tag)
         {
             try
@@ -35,6 +42,7 @@ namespace MvcCms.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Route("edit/{tag}")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string tag, string newTag)
         {
@@ -55,6 +63,7 @@ namespace MvcCms.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [Route("delete/{tag}")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string tag)
         {
@@ -68,6 +77,7 @@ namespace MvcCms.Areas.Admin.Controllers
 
         // added foo because the post signature needs to differ from get...!?!?
         [HttpPost]
+        [Route("delete/{tag}")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string tag, bool foo)
         {
