@@ -5,33 +5,35 @@ using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MvcCms.Models;
+using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace MvcCms.Data
 {
     public class RoleRepository : IRoleRepository
     {
-        private readonly RoleStore<IdentityRole> _store;
+        private readonly CmsRoleStore _store;
         private readonly RoleManager<IdentityRole> _manager;
 
         public RoleRepository()
         {
-            _store = new RoleStore<IdentityRole>();
+            _store = new CmsRoleStore();
             _manager = new RoleManager<IdentityRole>(_store);
         }
 
-        public IdentityRole GetRoleByName(string name)
+        public async Task<IdentityRole> GetRoleByNameAsync(string name)
         {
-            return _store.FindByNameAsync(name).Result;
+            return await _store.FindByNameAsync(name);
         }
 
-        public IEnumerable<IdentityRole> GetAllRoles()
+        public async Task<IEnumerable<IdentityRole>> GetAllRolesAsync()
         {
-            return _store.Roles.ToArray();
+            return await _store.Roles.ToArrayAsync();
         }
 
-        public void Create(IdentityRole role)
+        public async Task CreateAsync(IdentityRole role)
         {
-            _manager.Create(role);
+            await _manager.CreateAsync(role);
         }
 
         private bool _disposed = false;

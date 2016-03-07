@@ -39,7 +39,7 @@ namespace MvcCms.Areas.Admin.Controllers
                 var model = _repository.Get(tag);
                 return View(model: model);
             }
-            catch (KeyNotFoundException e) { return HttpNotFound(); }
+            catch (KeyNotFoundException) { return HttpNotFound(); }
         }
 
         [HttpPost]
@@ -74,7 +74,7 @@ namespace MvcCms.Areas.Admin.Controllers
                 var model = _repository.Get(tag);
                 return View(model: model);
             }
-            catch (KeyNotFoundException e) { return HttpNotFound(); }
+            catch (KeyNotFoundException) { return HttpNotFound(); }
         }
 
         // added foo because the post signature needs to differ from get...!?!?
@@ -88,7 +88,7 @@ namespace MvcCms.Areas.Admin.Controllers
                 _repository.Delete(tag);
                 return RedirectToAction("index");
             }
-            catch (KeyNotFoundException e) { return HttpNotFound(); }
+            catch (KeyNotFoundException) { return HttpNotFound(); }
         }
     }
 }

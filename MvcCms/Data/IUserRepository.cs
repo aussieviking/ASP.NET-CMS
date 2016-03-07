@@ -3,15 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using MvcCms.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 
 namespace MvcCms.Data
 {
     public interface IUserRepository : IDisposable
     {
-        CmsUser GetUserByName(string username);
-        IEnumerable<CmsUser> GetAllUsers();
+        Task<CmsUser> GetUserByNameAsync(string username);
+        Task<IEnumerable<CmsUser>> GetAllUsersAsync();
         Task CreateAsync(CmsUser user, string password);
-        void Delete(CmsUser user);
-        void Update(CmsUser user);
+        Task DeleteAsync(CmsUser user);
+        Task UpdateAsync(CmsUser user);
+        PasswordVerificationResult VerifyHashedPassword(string passwordHash, string currentPassword);
+        string HashPassword(string password);
+        Task AddUserToRoleAsync(CmsUser user, string role);
+        Task<IEnumerable<string>> GetRolesForUserAsync(CmsUser user);
+        Task RemoveUserFromRolesAsync(CmsUser user, params string[] roleNames);
     }
 }

@@ -103,7 +103,7 @@ namespace MvcCms.Areas.Admin.Controllers
             {
                 _repository.Edit(postId, model);
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 return HttpNotFound();
             }
@@ -138,7 +138,7 @@ namespace MvcCms.Areas.Admin.Controllers
                 _repository.Delete(postId);
                 return RedirectToAction("index");
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 return HttpNotFound();
             }

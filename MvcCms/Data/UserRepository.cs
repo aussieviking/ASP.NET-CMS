@@ -4,6 +4,8 @@ using MvcCms.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using System.Data.Entity;
+using System;
 
 namespace MvcCms.Data
 {
@@ -18,14 +20,14 @@ namespace MvcCms.Data
             _manager = new CmsUserManager(_store);
         }
 
-        public CmsUser GetUserByName(string username)
+        public async Task<CmsUser> GetUserByNameAsync(string username)
         {
-            return _store.FindByNameAsync(username).Result;
+            return await _store.FindByNameAsync(username);
         }
 
-        public IEnumerable<CmsUser> GetAllUsers()
+        public async Task<IEnumerable<CmsUser>> GetAllUsersAsync()
         {
-            return _store.Users.ToArray();
+            return await _store.Users.ToArrayAsync();
         }
 
         public async Task CreateAsync(CmsUser user, string password)
@@ -33,14 +35,42 @@ namespace MvcCms.Data
             await _manager.CreateAsync(user, password);
         }
 
-        public void Delete(CmsUser user)
+        public async Task DeleteAsync(CmsUser user)
         {
-            var result = _manager.DeleteAsync(user).Result;
+            await _manager.DeleteAsync(user);
         }
 
-        public void Update(CmsUser user)
+        public async Task UpdateAsync(CmsUser user)
         {
-            var result = _manager.UpdateAsync(user).Result;
+            await _manager.UpdateAsync(user);
+        }
+
+        public PasswordVerificationResult VerifyHashedPassword(string passwordHash, string currentPassword)
+        {
+            return _manager.PasswordHasher.VerifyHashedPassword(passwordHash, currentPassword);
+        }
+
+        public string HashPassword(string password)
+        {
+            return _manager.PasswordHasher.HashPassword(password);
+        }
+
+        public async Task AddUserToRoleAsync(CmsUser user, string role)
+        {
+            await _manager.AddToRoleAsync(user.Id, role);
+        }
+
+        public async Task<IEnumerable<string>> GetRolesForUserAsync(CmsUser user)
+        {
+            return await _manager.GetRolesAsync(user.Id);
+        }
+
+        public async Task RemoveUserFromRolesAsync(CmsUser user, params string[] roleNames)
+        {
+            foreach(var role in roleNames)
+            {
+                await _manager.RemoveFromRoleAsync(user.Id, role);
+            }
         }
 
         private bool _disposed = false;
@@ -55,5 +85,7 @@ namespace MvcCms.Data
 
             _disposed = true;
         }
+
+        
     }
 }

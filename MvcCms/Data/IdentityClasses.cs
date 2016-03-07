@@ -19,6 +19,17 @@ namespace MvcCms.Data
         { }
     }
 
+    public class CmsRoleStore : RoleStore<IdentityRole>
+    {
+        public CmsRoleStore()
+            : this(new CmsContext())
+        { }
+
+        public CmsRoleStore(CmsContext context)
+            : base(context)
+        { }
+    }
+
     public class CmsUserManager : UserManager<CmsUser>
     {
         public CmsUserManager()
@@ -28,6 +39,5 @@ namespace MvcCms.Data
         public CmsUserManager(UserStore<CmsUser> userStore)
             : base(userStore)
         { }
-
     }
 }

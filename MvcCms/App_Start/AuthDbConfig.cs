@@ -14,11 +14,22 @@ namespace MvcCms.App_Start
     {
         public async static Task RegisterAdmin()
         {
-            //using (var context = new CmsContext("LocalDb"))
-            //using (var userStore = new UserStore<CmsUser>(context))
+            await CreateAdminUser();
+
+
+            using (var roles = new RoleRepository())
+            {
+                await CreateRoleIfNotExist(roles, "admin");
+                await CreateRoleIfNotExist(roles, "editor");
+                await CreateRoleIfNotExist(roles, "author");
+            }
+        }
+
+        private static async Task CreateAdminUser()
+        {
             using (var users = new UserRepository())
             {
-                var user = users.GetUserByName("admin");
+                var user = await users.GetUserByNameAsync("admin");
                 if (user != null) return;
 
                 var adminUser = new CmsUser
@@ -30,20 +41,13 @@ namespace MvcCms.App_Start
 
                 await users.CreateAsync(adminUser, "Passw0rd1234");
             }
-
-            using (var roles = new RoleRepository())
-            {
-                CreateRoleIfNotExist(roles, "admin");
-                CreateRoleIfNotExist(roles, "editor");
-                CreateRoleIfNotExist(roles, "author");
-            }
         }
 
-        private static void CreateRoleIfNotExist(RoleRepository roles, string role)
+        private static async Task CreateRoleIfNotExist(RoleRepository roles, string role)
         {
-            if (roles.GetRoleByName(role) == null)
+            if (await roles.GetRoleByNameAsync(role) == null)
             {
-                roles.Create(new IdentityRole(role));
+                await roles.CreateAsync(new IdentityRole(role));
             }
         }
     }
