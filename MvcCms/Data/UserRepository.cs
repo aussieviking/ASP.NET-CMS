@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System;
+using System.Security.Claims;
 
 namespace MvcCms.Data
 {
@@ -86,6 +87,15 @@ namespace MvcCms.Data
             _disposed = true;
         }
 
-        
+        public async Task<CmsUser> GetLoginUserAsync(string username, string password)
+        {
+            return await _manager.FindAsync(username, password);
+        }
+
+        public async Task<ClaimsIdentity> CreateIdentityAsync(CmsUser user)
+        {
+            return await _manager.CreateIdentityAsync(
+                user, DefaultAuthenticationTypes.ApplicationCookie);
+        }
     }
 }

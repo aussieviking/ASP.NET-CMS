@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MvcCms.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
 namespace MvcCms.Data
 {
@@ -19,5 +20,7 @@ namespace MvcCms.Data
         Task AddUserToRoleAsync(CmsUser user, string role);
         Task<IEnumerable<string>> GetRolesForUserAsync(CmsUser user);
         Task RemoveUserFromRolesAsync(CmsUser user, params string[] roleNames);
+        Task<CmsUser> GetLoginUserAsync(string username, string password);
+        Task<ClaimsIdentity> CreateIdentityAsync(CmsUser user);
     }
 }
