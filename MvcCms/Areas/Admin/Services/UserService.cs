@@ -51,7 +51,7 @@ namespace MvcCms.Areas.Admin.Services
         {
             if (!_modelState.IsValid) return false;
 
-            if (String.IsNullOrEmpty(model.NewPassword))
+            if (String.IsNullOrWhiteSpace(model.NewPassword))
             {
                 _modelState.AddModelError(String.Empty, "Please specify a password");
                 return false;
