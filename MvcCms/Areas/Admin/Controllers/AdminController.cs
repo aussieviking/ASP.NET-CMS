@@ -64,5 +64,18 @@ namespace MvcCms.Areas.Admin.Controllers
 
             return RedirectToAction("index");
         }
+
+        private bool _isDisposed;
+        protected override void Dispose(bool disposing)
+        {
+            if (_isDisposed != true)
+            {
+                _users.Dispose();
+            }
+
+            _isDisposed = true;
+
+            base.Dispose(disposing);
+        }
     }
 }

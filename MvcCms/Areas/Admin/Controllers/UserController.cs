@@ -13,6 +13,7 @@ namespace MvcCms.Areas.Admin.Controllers
 {
     [RouteArea("admin")]
     [RoutePrefix("user")]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -28,6 +29,7 @@ namespace MvcCms.Areas.Admin.Controllers
 
         // GET: admin/user
         [Route("")]
+        [Authorize(Roles="admin")]
         public async Task<ActionResult> Index()
         {
             var users = await _userRepository.GetAllUsersAsync();
@@ -38,6 +40,7 @@ namespace MvcCms.Areas.Admin.Controllers
         // GET: admin/user/create
         [Route("create")]
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Create()
         {
             var model = new UserViewModel();
@@ -50,6 +53,7 @@ namespace MvcCms.Areas.Admin.Controllers
         [Route("create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Create(UserViewModel model)
         {
             var completed = await _userService.CreateAsync(model);
@@ -61,8 +65,15 @@ namespace MvcCms.Areas.Admin.Controllers
         // GET: admin/user/edit/<username>
         [Route("edit/{username}")]
         [HttpGet]
+        [Authorize(Roles = "admin, editor, author")]
         public async Task<ActionResult> Edit(string username)
         {
+            var currentUser = User.Identity.Name;
+            if (!User.IsInRole("admin") && !String.Equals(currentUser, username, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return new HttpUnauthorizedResult();
+            }
+
             var user = await _userService.GetUserByNameAsync(username);
             if (user == null) return HttpNotFound();
 
@@ -73,18 +84,31 @@ namespace MvcCms.Areas.Admin.Controllers
         [Route("edit/{username}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(UserViewModel model)
+        [Authorize(Roles = "admin, editor, author")]
+        public async Task<ActionResult> Edit(UserViewModel model, string username)
         {
-            var updated = await _userService.UpdateAsync(model);
-            if (!updated) return View();
+            var currentUser = User.Identity.Name;
+            var isAdmin = User.IsInRole("admin");
+            if (!isAdmin && !String.Equals(currentUser, username, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return new HttpUnauthorizedResult();
+            }
 
-            return RedirectToAction("index");
+            var updated = await _userService.UpdateAsync(model);
+            if (updated)
+            {
+                if (isAdmin) { return RedirectToAction("index"); }
+                else { RedirectToAction("index", "admin"); }
+            }
+
+            return View();
         }
 
         // POST: admin/user/delete/<username>
         [Route("delete/{username}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(string username)
         {
             await _userService.DeleteAsync(username);
